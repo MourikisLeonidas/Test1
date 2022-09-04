@@ -15,56 +15,23 @@ namespace Helper
 
         internal static List<CoordinateModel> GetListOfItems(string jsonstring) //2
         {
-            return JsonSerializer.Deserialize<List<CoordinateModel>>(jsonstring);
-        }
-
-        internal static void WriteToJsonFile(List<CoordinateModel> crdList)     //8
-        {
-            var opt = new JsonSerializerOptions() { WriteIndented = true };
-            string json = JsonSerializer.Serialize(crdList, opt);
-            File.WriteAllText("Complete.json", json);
-        }
-
-        internal static List<CoordinateModel> CreateObjectFromArray(double[,] distanceTable)        //7
-        {
-            //CoordinateModel crd ;
-            List<CoordinateModel> crdList = new List<CoordinateModel>();
-
-
-            for (int i = 1; i < distanceTable.GetLength(0); i++)
+            List<CoordinateModel> pointList = JsonSerializer.Deserialize<List<CoordinateModel>>(jsonstring);
+            pointList[0].Id = 1;
+            for (int i=1; i<pointList.Count; i++)
             {
-                CoordinateModel crd = new CoordinateModel();
-                crd.id = (int)distanceTable[i, 1];
-                crd.longitude = distanceTable[i, 2];
-                crd.latitude = distanceTable[i, 3];
-                crd.distanceFromPrevious = distanceTable[i, 4];
-                crd.distranceFromStart = distanceTable[i, 5];
-                crdList.Add(crd);
+                pointList[i].Id = i;
+                pointList[i].DistanceFromPrevious = HelperSubroutines.Distance(
+                                                            pointList[i].longitude,
+                                                            pointList[i - 1].longitude,
+                                                            pointList[i].latitude,
+                                                            pointList[i - 1].latitude
+                                                            );
+                pointList[i].DistanceFromStart = pointList[i - 1].DistanceFromStart + pointList[i].DistanceFromPrevious; ;
             }
-
-            return crdList;
+            return pointList;
         }
 
-        internal static void DisplayResults(List<CoordinateModel> crd)      //3
-        {
-            int n = 1;
-            foreach (var item in crd)
-            {
-                Console.WriteLine($"For point {n} the longitude is {item.longitude} and the latitude is {item.latitude}");
-                n++;
-            }
-            Console.WriteLine($"\r\nTotally {crd.Count} items read");
-            Console.ReadLine();
-        }
-
-        private static double ToRadians(double angleIn10thofaDegree)        //From Distance
-        {
-            // Angle in 10th
-            // of a degree
-            return (angleIn10thofaDegree * Math.PI) / 180;
-        }
-
-        public static double Distance(double lon1, double lon2, double lat1, double lat2)
+        public static double Distance(double lon1, double lon2, double lat1, double lat2)       //2a
         {
 
             // The math module contains
@@ -94,45 +61,33 @@ namespace Helper
             return (c * r);
         }
 
-        internal static double[,] WriteIdLonLatToTable(List<CoordinateModel> crd)       //4
+        private static double ToRadians(double angleIn10thofaDegree)        //2b
         {
-            double[,] distanceTable = new double[crd.Count + 1, 6];
-
-            int n = 1;
-            foreach (var item in crd)
-            {
-                distanceTable[n, 1] = n;
-                distanceTable[n, 2] = item.longitude;
-                distanceTable[n, 3] = item.latitude;
-                n++;
-            }
-
-            return distanceTable;
+            // Angle in 10th
+            // of a degree
+            return (angleIn10thofaDegree * Math.PI) / 180;
         }
 
-        internal static double[,] CalcWriteDistancesToTable(double[,] distanceTable)        //5
+        internal static void DisplayResults(List<CoordinateModel> pointList)      //3
         {
-            for (int i = 2; i < distanceTable.GetLength(0); i++)
+            Console.WriteLine($"{"Id",-5}{"Longitute",-15}{"Latitude",-15}{"Distance from previous",-25}{"Distance from start",-25}");
+            foreach (var point in pointList)
             {
-                distanceTable[i, 4] = HelperSubroutines.Distance(
-                                                            distanceTable[i, 2],
-                                                            distanceTable[i - 1, 2],
-                                                            distanceTable[i, 3],
-                                                            distanceTable[i - 1, 3]
-                                                            );
-                distanceTable[i, 5] = distanceTable[i - 1, 5] + distanceTable[i, 4];
+                //Console.WriteLine($"{point} the longitude is {point.Longitude} and the latitude is {point.Latitude}");
+                Console.WriteLine($"" +
+                    $"{point.Id,-5}" +
+                    $"{Math.Round(point.longitude, 5),-15}" +
+                    $"{Math.Round(point.latitude, 5),-15}" +
+                    $"{Math.Round(point.DistanceFromPrevious, 3),-25}" +
+                    $"{Math.Round(point.DistanceFromStart, 3),-25}");
             }
-
-            return distanceTable;
         }
-
-        internal static void DisplayDistanceTable(double[,] distanceTable)      //6
+                
+        internal static void WriteToJsonFile(List<CoordinateModel> pointList)     //4
         {
-            for (int i = 1; i < distanceTable.GetLength(0); i++)
-            {
-                Console.WriteLine($"{distanceTable[i, 1]} \t{distanceTable[i, 2]} \t{distanceTable[i, 3]} \t{distanceTable[i, 4]} \t{distanceTable[i, 5]}");
-            }
-            Console.ReadLine();
+            var opt = new JsonSerializerOptions() { WriteIndented = true };
+            string json = JsonSerializer.Serialize(pointList, opt);
+            File.WriteAllText("Complete.json", json);
         }
     }
 }

@@ -11,29 +11,26 @@ namespace Test1
     {
         static void Main(string[] args)
         {
-            //1 - Get Json string
+            // Από τα Nuget πρέπει να γίνει εγκατάσταση το System.Text.Json
+
+            // 1 - Get Json string
+            // Στο πιο κάτω βήμα, δημιουργείται ένα string jsonstring που περιέχει το filename του json αρχείου
             string jsonstring = HelperSubroutines.GetJsonstring();
 
-            //2 - Convert to list
-            List<CoordinateModel> crd = HelperSubroutines.GetListOfItems(jsonstring);
+            // 2 - Convert to list
+            // Στέλνεται το jsonstring που είναι τύπου string και επιστρέφει μία λίστα pointList που περιέχει objects.
+            // Αρχικά περνούν μόνο οι στήλες 2 & 3 από το json file με το longitude & latitude και μετά υπολογίζονται
+            // και γράφονται και οι άλλες στήλες (Id, DistanceFromPreviousdPoint, DistanceFronStart)
+            List<CoordinateModel> pointList = HelperSubroutines.GetListOfItems(jsonstring);
 
-            //3 - Write results to console
-            HelperSubroutines.DisplayResults(crd);
+            // 3 - Write results to console
+            HelperSubroutines.DisplayResults(pointList);
 
-            //4 - Write Id, Longitude, Latitude to columns 1,2,3 of distanceTable
-            double[,] distanceTable = HelperSubroutines.WriteIdLonLatToTable(crd);
+            
+            // 4 - Write list of point model object to a json file
+            HelperSubroutines.WriteToJsonFile(pointList);
 
-            //5 - Calculate and write distances to distanceTable
-            distanceTable = HelperSubroutines.CalcWriteDistancesToTable(distanceTable);
-
-            //6 - Write distanceTable to console
-            HelperSubroutines.DisplayDistanceTable(distanceTable);
-
-            //7 - 
-            List<CoordinateModel> crdList = HelperSubroutines.CreateObjectFromArray(distanceTable);
-
-            //8
-            HelperSubroutines.WriteToJsonFile(crdList);
+            // 5 - Create a new list of point model objects and put in thid list Start point, Endpoint and all 
         }
     }
 }

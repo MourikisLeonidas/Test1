@@ -8,10 +8,10 @@ namespace Test1
 {
     internal class CoordinateModel
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public double longitude { get; set; }
         public double latitude { get; set; }
-        public double distanceFromPrevious { get; set; }
-        public double distranceFromStart { get; set; }
+        public double DistanceFromPrevious { get; set; }
+        public double DistanceFromStart { get; set; }
     }
 }
