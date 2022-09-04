@@ -21,7 +21,7 @@ namespace Test1
             // Στέλνεται το jsonstring που είναι τύπου string και επιστρέφει μία λίστα pointList που περιέχει objects.
             // Αρχικά περνούν μόνο οι στήλες 2 & 3 από το json file με το longitude & latitude και μετά υπολογίζονται
             // και γράφονται και οι άλλες στήλες (Id, DistanceFromPreviousdPoint, DistanceFronStart)
-            List<CoordinateModel> pointList = HelperSubroutines.GetListOfItems(jsonstring);
+            List<CoordinateModel> pointList = HelperSubroutines.GetFullListOfPoints(jsonstring);
 
             // 3 - Write results to console
             HelperSubroutines.DisplayResults(pointList);

@@ -13,11 +13,11 @@ namespace Helper
             return File.ReadAllText("Rome_Naples_Route.json");
         }
 
-        internal static List<CoordinateModel> GetListOfItems(string jsonstring) //2
+        internal static List<CoordinateModel> GetFullListOfPoints(string jsonstring) //2
         {
             List<CoordinateModel> pointList = JsonSerializer.Deserialize<List<CoordinateModel>>(jsonstring);
             pointList[0].Id = 1;
-            for (int i=1; i<pointList.Count; i++)
+            for (int i = 1; i < pointList.Count; i++)
             {
                 pointList[i].Id = i;
                 pointList[i].DistanceFromPrevious = HelperSubroutines.Distance(
@@ -82,12 +82,30 @@ namespace Helper
                     $"{Math.Round(point.DistanceFromStart, 3),-25}");
             }
         }
-                
+
         internal static void WriteToJsonFile(List<CoordinateModel> pointList)     //4
         {
             var opt = new JsonSerializerOptions() { WriteIndented = true };
             string json = JsonSerializer.Serialize(pointList, opt);
             File.WriteAllText("Complete.json", json);
+        }
+        internal static List<CoordinateModel> CalculatePointStopList(List<CoordinateModel> pointList, int noStations)     //5
+        {
+            List<CoordinateModel> stopListPoints = new List<CoordinateModel>();
+
+            return stopListPoints;
+        }
+
+        internal static List<CoordinateModel>(List<CoordinateModel> pointList)
+        {
+            var diff1=Math.Abs(pointList[0].DistanceFromStart);
+            diff2=Math.Abs(pointList[2].DistanceFromStart);
+
+            if (CalculatePointStopList[0]-)
+	{
+
+	}
+            return nearestPoint;
         }
     }
 }
