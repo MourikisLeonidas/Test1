@@ -26,11 +26,15 @@ namespace Test1
             // 3 - Write results to console
             HelperSubroutines.DisplayResults(pointList);
 
-            
             // 4 - Write list of point model object to a json file
-            HelperSubroutines.WriteToJsonFile(pointList);
+            //HelperSubroutines.WriteToJsonFile(pointList);
 
-            // 5 - Create a new list of point model objects and put in thid list Start point, Endpoint and all 
+            // 5 - Create a new list of point model objects and put in this list Start point, Endpoint and all intermediate points
+            var stopListPoints = HelperSubroutines.CalculatePointStopList(pointList, 10);
+
+            // 6 - Write results to console     //3
+            HelperSubroutines.DisplayResults(stopListPoints);
+            
         }
     }
 }

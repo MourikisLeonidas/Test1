@@ -19,7 +19,7 @@ namespace Helper
             pointList[0].Id = 1;
             for (int i = 1; i < pointList.Count; i++)
             {
-                pointList[i].Id = i;
+                pointList[i].Id = i + 1;
                 pointList[i].DistanceFromPrevious = HelperSubroutines.Distance(
                                                             pointList[i].longitude,
                                                             pointList[i - 1].longitude,
@@ -92,20 +92,35 @@ namespace Helper
         internal static List<CoordinateModel> CalculatePointStopList(List<CoordinateModel> pointList, int noStations)     //5
         {
             List<CoordinateModel> stopListPoints = new List<CoordinateModel>();
+            var spacing = pointList[pointList.Count - 1].DistanceFromStart / (noStations + 1);
+            stopListPoints.Add(pointList[0]);
+            
 
+            var i1 = 1;
+            for (var j = 1; j <= noStations; j++)
+            {
+                for (var i = i1; i <= pointList.Count; i++)
+                {
+                    double interPoint = spacing * j;
+                    if (pointList[i].DistanceFromStart < interPoint && pointList[i + 1].DistanceFromStart > interPoint)
+                    {
+                        CoordinateModel interPointActual = InterPoint(pointList[i], interPoint, pointList[i + 1]);
+                        stopListPoints.Add(interPointActual);
+                        i1 = i + 1;
+                        break;
+                    }
+                }
+            }
+            stopListPoints.Add(pointList[pointList.Count-1]);       //5b
             return stopListPoints;
         }
 
-        internal static List<CoordinateModel>(List<CoordinateModel> pointList)
+        internal static CoordinateModel InterPoint(CoordinateModel p1, double interPoint, CoordinateModel p3)
         {
-            var diff1=Math.Abs(pointList[0].DistanceFromStart);
-            diff2=Math.Abs(pointList[2].DistanceFromStart);
-
-            if (CalculatePointStopList[0]-)
-	{
-
-	}
-            return nearestPoint;
+            var diff1 = interPoint - p1.DistanceFromStart;
+            var diff2 = p3.DistanceFromStart - interPoint;
+            var intPoint = diff1 <= diff2 ? p1 : p3;
+            return intPoint;
         }
     }
 }
